@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
 	public Text textInDice;
 	public Text selectChar;
 
+	private int curPosOfChar = 0;
 	private bool isDiceButtonOn = false;
 	private float power = 0.5f;
 	private int diceResult = 0;
@@ -22,6 +23,8 @@ public class GameManager : MonoBehaviour {
 	private int goalOfFirstResource;
 	private int goalOfSecondResource;
 	private BoardManager boardScript;
+	private Vector3 animalCharPos = new Vector3 (2.2f, 0.1f, 0f);
+	private GameObject animalCharObject;
 
 	void Awake(){
 		if (instance == null)
@@ -38,41 +41,30 @@ public class GameManager : MonoBehaviour {
 	void Update(){
 		if (isDiceButtonOn)
 			selectChar.text = "Select char!";
-		/*void Update () 
-{ 
-if(Input.GetMouseButtonDown(0)) 
-{ 
-mousePos = Input.mousePosition; 
-} 
-
-if(Input.GetMouseButtonUp(0)) 
-{ 
-if(mousePos ==Input.mousePosition) 
-{ 
-    Ray ray = Camera.main.ScreenPointToRay(mousePos); 
-  RaycastHit hit; 
-
-  if(Physics.Raycast(ray, out hit, 100)) 
-  { 
-        Debug.Log(hit.collider.gameObject); 
-Debug.DrawLine(ray.origin,ray.direction); 
-hit.collider.gameObject.renderer.enabled =false; 
-
-} 
-
-} 
-
-
-} 
-
-}*/
-
+		if (isDiceButtonOn && Input.GetMouseButtonDown (0)) {
+			RaycastHit hit;
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			Physics.Raycast (ray, out hit);
+			if (hit.collider != null) {
+				MoveChar (curPosOfChar, diceResult);
+				curPosOfChar = curPosOfChar + diceResult;
+			}
+		}
 	} 
+		
+
+	void MoveChar(int currentPos, int diceRes)
+	{
+		for (int i = currentPos; i < currentPos+diceRes; i++) {
+			animalCharPos = boardScript.GetPositionOfPad (i);
+			animalCharObject.transform.position = animalCharPos;
+		}
+	}
 
 	void InitGame()
 	{
 		boardScript.SetupScene (level, backgroundCode);
-		Instantiate (animalChar,new Vector3(2.2f,0.1f,0f), Quaternion.identity);//*********************************
+		animalCharObject = Instantiate (animalChar,animalCharPos, Quaternion.identity);//*********************************
 		SetGoalResource ();
 		UpdateUi ();
 	}
@@ -107,5 +99,15 @@ hit.collider.gameObject.renderer.enabled =false;
 			target = hit.collider.gameObject;
 		}
 		return target;
+	}
+
+	public float ReturnRowMinusTwoYPosition()
+	{
+		return boardScript.GetRowMinusTwoYPosition();
+	}
+
+	public GameObject GetCharObject()
+	{
+		return animalCharObject;
 	}
 }

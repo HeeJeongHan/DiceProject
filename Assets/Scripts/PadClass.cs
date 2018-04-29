@@ -61,4 +61,8 @@ public class PadClass : MonoBehaviour {
 		transform.position = padPosition;
 		
 	}
+	public Vector3 GetPadPosition()
+	{
+		return padPosition;
+	}
 }

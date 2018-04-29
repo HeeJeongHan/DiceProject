@@ -59,7 +59,7 @@ public class BoardManager : MonoBehaviour {
 		else
 			return 1;
 	}
-
+		
 	void InitalisePad()//빈 오브젝트 만들기>padSprite를 instantiate>padSprite의 padclass를 getcomponent>Set Position
 	{		
 		padObject = new GameObject[RowsByLevel ()];
@@ -108,6 +108,7 @@ public class BoardManager : MonoBehaviour {
 			sumOfSecondResource += numberOfSecondResource;
 		}
 	}
+
 	public int GetSumOfFirstResouce()
 	{
 		return sumOfFirstResource;
@@ -115,5 +116,15 @@ public class BoardManager : MonoBehaviour {
 	public int GetSumOfSecondResouce()
 	{
 		return sumOfSecondResource;
+	}
+	public Vector3 GetPositionOfPad(int indexArr)
+	{
+		return padClassArray [indexArr].GetPadPosition();
+	}
+
+	public float GetRowMinusTwoYPosition()
+	{
+		Vector3 minusTwoPosition = padClassArray [RowsByLevel () - 3].GetPadPosition ();
+		return minusTwoPosition.y;
 	}
 }
